@@ -57,11 +57,11 @@ void loop() {
   //if(y>90) y-=360;  
 
   if (mySensorData) {
-    Serial.println("\n-----------------------------------------\n");
+    Serial.println("-----------------------------------------");
     Serial.print("AngleX= ");
     Serial.println(x);
 
-    mySensorData.print(x);
+    mySensorData.println(x);
     mySensorData.close();
     
   }
