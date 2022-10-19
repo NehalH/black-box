@@ -69,6 +69,19 @@ void loop() {
   if(x>90) x-=360;                                          // Convert angles (x>180) to Negative angles (0 to -180)
   //if(y>90) y-=360;  
 
+  /*
+  if(x<-180){
+    x= 90+(270+x);
+  }	
+  */
+
+  /*
+  if(x<-180){
+    x= x+180
+  }
+  */
+
+
   if (mySensorData) {
     Serial.println("-----------------------------------------");
     Serial.print(mins);
