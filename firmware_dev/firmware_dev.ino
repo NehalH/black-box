@@ -1,28 +1,57 @@
- #include "Wire.h"
- #include <MPU6050_light.h>
- MPU6050 mpu(Wire);
- unsigned long timer = 0;
- void setup() {
-   Serial.begin(9600);
-   Wire.begin();
- byte status = mpu.begin();
-   Serial.print(F("MPU6050 status: "));
-   Serial.println(status);
-   while (status != 0) { } // stop everything if could not connect to MPU6050
- Serial.println(F("Calculating offsets, do not move MPU6050"));
-   delay(1000);
-   mpu.calcOffsets(); // gyro and accelero
-   Serial.println("Done!\n");
- }
- void loop() {
-   mpu.update();
- if ((millis() - timer) > 10) { // print data every 10ms
-     Serial.print("X : ");
-     Serial.print(mpu.getAngleX());
-     Serial.print("\tY : ");
-     Serial.print(mpu.getAngleY());
-     Serial.print("\tZ : ");
-     Serial.println(mpu.getAngleZ());
-     timer = millis();
-   }
- }
+#include <Wire.h>
+
+const int MPU_addr=0x68;
+int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+ 
+int minVal=265;
+int maxVal=402;
+ 
+int x;
+int y;
+int z;
+
+void setup() {
+  
+  Serial.begin(9600);
+  
+  Wire.begin();
+  Wire.beginTransmission(MPU_addr);
+  Wire.write(0x6B);
+  Wire.write(0);
+  Wire.endTransmission(true);
+
+}
+
+/////////////////////////////////////////////////////////////////
+
+void loop() { 
+ 
+  // Read angle
+  Wire.beginTransmission(MPU_addr);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU_addr,14,true);
+
+  AcX=Wire.read()<<8|Wire.read();
+  AcY=Wire.read()<<8|Wire.read();
+  AcZ=Wire.read()<<8|Wire.read();
+
+  int xAng = map(AcX,minVal,maxVal,-90,90);
+  int yAng = map(AcY,minVal,maxVal,-90,90);
+  int zAng = map(AcZ,minVal,maxVal,-90,90);
+  
+  x= RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);                 // Convert rad to deg
+  //y= RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
+  //z= RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
+  
+  if(x>90) x-=360;                                          // Convert angles (x>180) to Negative angles (0 to -180)
+  if(y>90) y-=360;  
+ 
+
+  Serial.println("\n-----------------------------------------\n");
+  Serial.print("AngleX= ");
+  Serial.println(x);
+ 
+  delay(1000);
+
+}
