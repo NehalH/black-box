@@ -11,6 +11,9 @@ int maxVal=402;
 
 int x;
 
+int sec= 00;
+int mins= 00;
+
 int chipSelect = 4; //chipSelect pin for the SD card Reader
 File mySensorData; //Data object you will write your sesnor data to
 
@@ -26,7 +29,11 @@ void setup() {
   Wire.write(0x6B);
   Wire.write(0);
   Wire.endTransmission(true);
-
+  
+  mySensorData = SD.open("PTData.txt", FILE_WRITE);
+  mySensorData.println("______________________R E S E T______________________");
+  mySensorData.close();
+  
 }
 
 /////////////////////////////////////////////////////////////////
@@ -40,6 +47,12 @@ void loop() {
   Wire.write(0x3B);
   Wire.endTransmission(false);
   Wire.requestFrom(MPU_addr,14,true);
+
+  sec++;
+  if(sec==60){
+    sec= 0;
+    mins++;
+  }
 
   AcX=Wire.read()<<8|Wire.read();
   AcY=Wire.read()<<8|Wire.read();
@@ -58,9 +71,16 @@ void loop() {
 
   if (mySensorData) {
     Serial.println("-----------------------------------------");
-    Serial.print("AngleX= ");
+    Serial.print(mins);
+    Serial.print(":");
+    Serial.print(sec);
+    Serial.print("\t\tPitch= ");
     Serial.println(x);
 
+    mySensorData.print(mins);
+    mySensorData.print(":");
+    mySensorData.print(sec);
+    mySensorData.print("\t\t");
     mySensorData.println(x);
     mySensorData.close();
     
