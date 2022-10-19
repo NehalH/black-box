@@ -69,22 +69,24 @@ void loop() {
   if(x>90) x-=360;                                          // Convert angles (x>180) to Negative angles (0 to -180)
   //if(y>90) y-=360;  
 
-  if (mySensorData) {
-    Serial.println("-----------------------------------------");
-    Serial.print(mins);
-    Serial.print(":");
-    Serial.print(sec);
-    Serial.print("\t\tPitch= ");
-    Serial.println(x);
-
-    mySensorData.print(mins);
-    mySensorData.print(":");
-    mySensorData.print(sec);
-    mySensorData.print("\t\t");
-    mySensorData.println(x);
-    mySensorData.close();
-    
+  if(x>29){
+    if (mySensorData) {
+      Serial.println("-----------------------------------------");
+      Serial.print(mins);
+      Serial.print(":");
+      Serial.print(sec);
+      Serial.print("\t\tPitch= ");
+      Serial.println(x);
+  
+      mySensorData.print(mins);
+      mySensorData.print(":");
+      mySensorData.print(sec);
+      mySensorData.print("\t\t");
+      mySensorData.println(x);
+      
+    }
   }
+  mySensorData.close();
   delay(1000);
 
 }
