@@ -98,6 +98,6 @@ void loop() {
     mySensorData.close();
     
   }
-  delay(1000);
+  delay(500);
 
 }
