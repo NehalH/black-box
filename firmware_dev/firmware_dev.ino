@@ -11,7 +11,7 @@ int maxVal=402;
 
 int x;
 
-int sec= 00;
+float sec= 00.0;
 int mins= 00;
 
 int chipSelect = 4; //chipSelect pin for the SD card Reader
@@ -48,9 +48,9 @@ void loop() {
   Wire.endTransmission(false);
   Wire.requestFrom(MPU_addr,14,true);
 
-  sec++;
-  if(sec==60){
-    sec= 0;
+  sec=sec+0.1;
+  if(sec>=60.0){
+    sec= 0.0;
     mins++;
   }
 
@@ -66,8 +66,7 @@ void loop() {
   //y= RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
   //z= RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
   
-  if(x>90) x-=360;                                          // Convert angles (x>180) to Negative angles (0 to -180)
-  //if(y>90) y-=360;  
+  if(x>90) x=90-(x-90);                                          // Convert angles (x>180) to Negative angles (0 to -180)
 
   /*
   if(x<-180){
@@ -98,6 +97,6 @@ void loop() {
     mySensorData.close();
     
   }
-  delay(500);
+  delay(100);
 
 }
